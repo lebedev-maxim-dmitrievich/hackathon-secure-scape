@@ -1,4 +1,5 @@
-﻿using EduPlatform.UserService.DTOs.ProgresesDTO;
+﻿using EduPlatform.UserService.DTOs.AchivementsDTO;
+using EduPlatform.UserService.DTOs.ProgresesDTO;
 using EduPlatform.UserService.DTOs.TasksDTO;
 using EduPlatform.UserService.DTOs.UsersDTO;
 using EduPlatform.UserService.Entity;
@@ -9,6 +10,8 @@ namespace EduPlatform.UserService.Db.Repositories.Interfaces;
 
 public interface IProfileRepository
 {
+    public Task<bool> CheckUser(long id);
+
     public Task<long> AddTask(TaskEntity task);
 
     public Task<ProgressVm?> GetProgress(long id);
@@ -17,4 +20,5 @@ public interface IProfileRepository
 
     public Task<List<TaskVm>?> GetTasksUser(long id);
 
+    public Task<List<AchievementVm>?> GetAchivements(long id);
 }

@@ -1,4 +1,5 @@
 ﻿using EduPlatform.UserService.Db.Repositories.Interfaces;
+using EduPlatform.UserService.DTOs.AchivementsDTO;
 using EduPlatform.UserService.DTOs.ProgresesDTO;
 using EduPlatform.UserService.DTOs.TasksDTO;
 using EduPlatform.UserService.DTOs.UsersDTO;
@@ -23,25 +24,32 @@ namespace EduPlatform.UserService.Services
 
         public async Task<long?> AddTaskInProgress(TaskVm taskVm)
         {
-            var task = taskVm == null ? null : _mapper.ToMap<TaskEntity>(taskVm);
+            var task = _mapper.ToMap<TaskEntity>(taskVm);
 
-            if (task != null) 
-            {
-                long id = await _profileRepository.AddTask(task);
+            long id = await _profileRepository.AddTask(task);
 
-                return id;
-            }
-            return null;
+            return id;
         }
 
         public async Task<List<TaskVm>?> GetAllTasksByUserId(long id)
         {
+            if (!_profileRepository.CheckUser(id).Result) return null;
+
             return await _profileRepository.GetTasksUser(id);
         }
 
         public async Task<ProgressVm?> GetProgresById(long id)
         {
+            if (!_profileRepository.CheckUser(id).Result) return null;
+
             return await _profileRepository.GetProgress(id);
+        }
+
+        public async Task<List<AchievementVm>?> GetUserAchivements(long id)
+        {
+            if (!_profileRepository.CheckUser(id).Result) return null;
+
+            return await _profileRepository.GetAchivements(id);
         }
 
         public async Task<UserVm?> GetUserById(long id)

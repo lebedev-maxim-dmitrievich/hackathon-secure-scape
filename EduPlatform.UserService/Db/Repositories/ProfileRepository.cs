@@ -1,5 +1,6 @@
 ﻿using EduPlatform.UserService.Db.Context;
 using EduPlatform.UserService.Db.Repositories.Interfaces;
+using EduPlatform.UserService.DTOs.AchivementsDTO;
 using EduPlatform.UserService.DTOs.ProgresesDTO;
 using EduPlatform.UserService.DTOs.TasksDTO;
 using EduPlatform.UserService.DTOs.UsersDTO;
@@ -8,6 +9,7 @@ using EduPlatform.UserService.Mappers.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace EduPlatform.UserService.Db.Repositories
@@ -21,6 +23,23 @@ namespace EduPlatform.UserService.Db.Repositories
         {
             _appDbContext = context;   
             _mapper = mapper;
+        }
+
+        public async Task<bool> CheckUser(long id)
+        {
+            var user = await _appDbContext.Users.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
+
+            if (user != null) return true;
+
+            return false;
+        }
+
+        public async Task<long> AddTask(TaskEntity task)
+        {
+            await _appDbContext.Tasks.AddAsync(task);
+            await _appDbContext.SaveChangesAsync();
+
+            return task.Id;
         }
 
         public async Task<ProgressVm?> GetProgress(long id)
@@ -43,16 +62,16 @@ namespace EduPlatform.UserService.Db.Repositories
         {
             var tasksEntity = await _appDbContext.Tasks.AsNoTracking().Where(t => t.ProgressId == id).ToListAsync();
 
-            var tasksDTO = tasksEntity.Count == 0 ? null : _mapper.ToMap<TaskEntity, TaskVm>(tasksEntity);
+            var tasksDTO = _mapper.ToMap<TaskEntity, TaskVm>(tasksEntity);
             return tasksDTO;
         }
 
-        public async Task<long> AddTask(TaskEntity task)
+        public async Task<List<AchievementVm>?> GetAchivements(long id)
         {
-            await _appDbContext.Tasks.AddAsync(task);
-            await _appDbContext.SaveChangesAsync();
+            var achivements = await _appDbContext.Achievements.AsNoTracking().Where(a => a.Id == id).ToListAsync();
 
-            return task.Id;
+            var achivementsDTO = _mapper.ToMap<Achievement, AchievementVm>(achivements);
+            return achivementsDTO;
         }
     }
 }

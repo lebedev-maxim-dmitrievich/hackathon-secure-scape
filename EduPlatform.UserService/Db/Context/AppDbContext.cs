@@ -9,6 +9,7 @@ public class AppDbContext : DbContext
     public DbSet<Role> Roles => Set<Role>();
     public DbSet<Progress> Progreses => Set<Progress>();
     public DbSet<TaskEntity> Tasks => Set<TaskEntity>();
+    public DbSet<Achievement> Achievements => Set<Achievement>();
 
     public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options) {}

@@ -30,7 +30,7 @@ namespace EduPlatform.UserService.Controllers
         /// </summary>
         /// <param name="id">Индентификатор пользователя</param>
         /// <response code="200">Прогресс найден, возвращает прогресс пользователя.</response>
-        /// <response code="404">Прогресс пользователя не найден.</response>
+        /// <response code="404">Прогресс пользователя не найден, пользователь не найден.</response>
         /// <returns></returns>
         [ProducesResponseType(typeof(ProgressVm), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -40,7 +40,7 @@ namespace EduPlatform.UserService.Controllers
         {
             var progress = await _profileService.GetProgresById(id);
 
-            if (progress == null) return NotFound(new ProblemDetails() { Detail = "Прогресс пользователя не найден" });
+            if (progress == null) return NotFound(new ProblemDetails() { Detail = "Прогресс пользователя не найден, пользователь не найден" });
             return Ok(progress);
         }
 
@@ -64,11 +64,11 @@ namespace EduPlatform.UserService.Controllers
         }
 
         /// <summary>
-        /// Возврат задач пользователя
+        /// Возврат заданий пользователя
         /// </summary>
         /// <param name="id">Индентификатор пользователя</param>
         /// <response code="200">Задания найдены, возвращает список выполненных заданий.</response>
-        /// <response code="404">Задания не найдены.</response>
+        /// <response code="404">Задания не найдены, пользователь не найден.</response>
         /// <returns></returns>
         [ProducesResponseType(typeof(List<TaskVm>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -78,8 +78,16 @@ namespace EduPlatform.UserService.Controllers
         {
             var tasks = await _profileService.GetAllTasksByUserId(id);
 
-            if (tasks == null) return NotFound(new ProblemDetails() { Detail = "Задания не найдены" });
+            if (tasks == null) return NotFound(new ProblemDetails() { Detail = "Задания не найдены, пользователь не найден" });
             return Ok(tasks);
+        }
+
+        public async Task<IActionResult> GetUserAchivements(long id)
+        {
+            var achivements = await _profileService.GetUserAchivements(id);
+
+            if (achivements == null) return NotFound(new ProblemDetails() { Detail = "Достижения не найдены, пользователь не найден" });
+            return Ok(achivements);
         }
 
         /// <summary>
