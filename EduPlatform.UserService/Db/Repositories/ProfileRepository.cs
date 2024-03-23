@@ -73,5 +73,13 @@ namespace EduPlatform.UserService.Db.Repositories
             var achivementsDTO = _mapper.ToMap<Achievement, AchievementVm>(achivements);
             return achivementsDTO;
         }
+
+        public async Task<long> UpdateProgress(Progress progress)
+        {
+             _appDbContext.Entry(progress).State = EntityState.Modified;
+            await _appDbContext.SaveChangesAsync();
+
+            return progress.Id;
+        }
     }
 }

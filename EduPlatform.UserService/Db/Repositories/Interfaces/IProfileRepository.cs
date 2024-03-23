@@ -21,4 +21,6 @@ public interface IProfileRepository
     public Task<List<TaskVm>?> GetTasksUser(long id);
 
     public Task<List<AchievementVm>?> GetAchivements(long id);
+
+    public Task<long> UpdateProgress(Progress progress);
 }

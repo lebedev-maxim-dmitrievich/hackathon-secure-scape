@@ -22,15 +22,6 @@ namespace EduPlatform.UserService.Services
             _mapper = mapper;
         }
 
-        public async Task<long?> AddTaskInProgress(TaskVm taskVm)
-        {
-            var task = _mapper.ToMap<TaskEntity>(taskVm);
-
-            long id = await _profileRepository.AddTask(task);
-
-            return id;
-        }
-
         public async Task<List<TaskVm>?> GetAllTasksByUserId(long id)
         {
             if (!_profileRepository.CheckUser(id).Result) return null;
@@ -45,7 +36,7 @@ namespace EduPlatform.UserService.Services
             return await _profileRepository.GetProgress(id);
         }
 
-        public async Task<List<AchievementVm>?> GetUserAchivements(long id)
+        public async Task<List<AchievementVm>?> GetUserAchievements(long id)
         {
             if (!_profileRepository.CheckUser(id).Result) return null;
 
@@ -55,6 +46,34 @@ namespace EduPlatform.UserService.Services
         public async Task<UserVm?> GetUserById(long id)
         {
             return await _profileRepository.GetUser(id);
+        }
+
+        public async Task<long> UpdateProgress(ProgressUpdateVm progressVm)
+        {
+            var task = new TaskEntity()
+            {
+                ExternalTaskId = progressVm.TaskId,
+                ProgressId = progressVm.ProgressId,
+            };
+
+            await _profileRepository.AddTask(task);
+
+            var progressDTO = await _profileRepository.GetProgress(progressVm.ProgressId);
+            if (progressDTO != null)
+            {
+                progressDTO.Scores += progressVm.TaskPoint;
+                progressDTO.CountComplitedTask++;
+            }
+
+            var progress = _mapper.ToMap<Progress>(progressDTO!);
+            long progressId = await _profileRepository.UpdateProgress(progress);
+
+            return progressId;
+        }
+
+        public async Task<List<long>> GetAndUpdateAchievments()
+        {
+
         }
     }
 }

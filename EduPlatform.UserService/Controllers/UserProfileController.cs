@@ -82,15 +82,26 @@ namespace EduPlatform.UserService.Controllers
             return Ok(tasks);
         }
 
-        public async Task<IActionResult> GetUserAchivements(long id)
+        /// <summary>
+        /// Возврат достижений пользователя
+        /// </summary>
+        /// <param name="id">Индентификатор пользователя</param>
+        /// <response code="200">Достижения найдены, возвращает список достижений пользователя.</response>
+        /// <response code="404">Достижения не найдены, пользователь не найден.</response>
+        /// <returns></returns>
+        [ProducesResponseType(typeof(long), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Route("allUserAchievements/{id}")]
+        [HttpGet]
+        public async Task<IActionResult> GetUserAchievements(long id)
         {
-            var achivements = await _profileService.GetUserAchivements(id);
+            var achivements = await _profileService.GetUserAchievements(id);
 
             if (achivements == null) return NotFound(new ProblemDetails() { Detail = "Достижения не найдены, пользователь не найден" });
             return Ok(achivements);
         }
 
-        /// <summary>
+        /*/// <summary>
         /// Добавление задачи в прогресс пользователя 
         /// </summary>
         /// <param name="taskVm">Объект для добавления задания</param>
@@ -107,6 +118,14 @@ namespace EduPlatform.UserService.Controllers
 
             long? id = await _profileService.AddTaskInProgress(taskVm);
             return Ok(id);
+        }*/
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateProgress(ProgressUpdateVm progressVm)
+        {
+            long progressId = await _profileService.UpdateProgress(progressVm);
+
+            return Ok(progressId);
         }
     }
 }

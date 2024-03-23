@@ -1,5 +1,7 @@
 ﻿using EduPlatform.UserService.Entity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
+using System.Reflection.Emit;
 
 namespace EduPlatform.UserService.Db.Context;
 
@@ -16,6 +18,13 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
+        builder.Entity<User>()
+        .HasMany(e => e.Achievements)
+        .WithMany(e => e.Users)
+        .UsingEntity<UserAchievementProgress>(
+            l => l.HasOne(e => e.Achievement).WithMany(e => e.UsersAchievementsProgress).HasForeignKey(e => e.AchievementId),
+            r => r.HasOne(e => e.User).WithMany(e => e.UsersAchievementsProgress).HasForeignKey(e => e.UserId));
+
         builder.Entity<User>()
             .HasOne(u => u.Progress)
             .WithOne(u => u.User)
@@ -86,6 +95,47 @@ public class AppDbContext : DbContext
             Id = 3,
             ExternalTaskId = 1,
             ProgressId = 2
+        });
+
+        builder.Entity<Achievement>().HasData(new Achievement
+        {
+            Id = 1,
+            Title = "Master Hacker",
+            Description = "Successfully hack 100 systems",
+            RelativeIconLocation = "/icons/hacker.png",
+            Requirement = 100,
+            Rarity = Enum.Rarities.Mythical
+        },
+
+        new Achievement
+        {
+            Id = 2,
+            Title = "Security Analyst",
+            Description = "Complete 50 security assessments",
+            RelativeIconLocation = "/icons/analyst.png",
+            Requirement = 50,
+            Rarity = Enum.Rarities.Rare
+        });
+
+        builder.Entity<UserAchievementProgress>().HasData(new UserAchievementProgress
+        {
+            UserId = 1,
+            AchievementId = 1,
+            Progress = 1
+        },
+
+        new UserAchievementProgress
+        {
+            UserId = 1,
+            AchievementId = 2,
+            Progress = 20
+        },
+
+        new UserAchievementProgress
+        {
+            UserId = 2,
+            AchievementId = 1,
+            Progress = 100
         });
 
         base.OnModelCreating(builder);

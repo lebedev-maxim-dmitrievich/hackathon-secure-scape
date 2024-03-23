@@ -15,8 +15,8 @@ namespace EduPlatform.UserService.Services.Interfaces
 
         public Task<List<TaskVm>?> GetAllTasksByUserId(long id);
 
-        public Task<long?> AddTaskInProgress(TaskVm taskVm);
+        public Task<List<AchievementVm>?> GetUserAchievements(long id);
 
-        public Task<List<AchievementVm>?> GetUserAchivements(long id);
+        public Task<long> UpdateProgress(ProgressUpdateVm progressVm);
     }
 }
