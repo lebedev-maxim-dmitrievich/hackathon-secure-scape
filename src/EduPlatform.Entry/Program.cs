@@ -1,3 +1,5 @@
+using Microsoft.Extensions.FileProviders;
+
 namespace EduPlatform.Entry
 {
     public class Program
@@ -6,11 +8,21 @@ namespace EduPlatform.Entry
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddControllers();
+            //builder.Services.AddControllers();
 
             var app = builder.Build();
 
-            app.MapControllers();
+            app.UseStaticFiles(new StaticFileOptions
+            { 
+                FileProvider = new PhysicalFileProvider(
+                    Path.Combine(builder.Environment.ContentRootPath, "..", "..", "resources"))
+            });
+
+            Console.WriteLine(builder.Environment.WebRootPath);
+
+            //app.MapControllers();
+
+            app.UseStaticFiles();
 
             app.MapGet("/", () => "Hello world from Entry");
 
