@@ -1,4 +1,5 @@
-﻿using EduPlatform.TaskService.Db.Repositories.Interfaces;
+﻿using EduPlatform.TaskService.Clients;
+using EduPlatform.TaskService.Db.Repositories.Interfaces;
 using EduPlatform.TaskService.DTOs;
 using EduPlatform.TaskService.Entities;
 using System;
@@ -62,6 +63,7 @@ public class TaskHandlerService : ITaskService
         var progressUpdate = new ProgressUpdateDto(userId, task.Id,
             task.Points, task.Topic.Title, task.Difficult);
 
-        throw new NotImplementedException("g");
+        var userServiceClient = new UserServiceClient();
+        await userServiceClient.SendUpdateProgress(progressUpdate);
     }
 }
