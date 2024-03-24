@@ -26,7 +26,7 @@ public interface IProfileRepository
 
     public Task<List<AchievementVm>> GetAllAchivements();
 
-    public Task<List<Achievement>> GetFullInformationUserAchivements(long id);
+    public Task<List<Achievement>> GetFullInformationUserAchievements(long id);
 
     public Task<List<UserAchievementProgressVm>> GetUserAchivements(long id);
 

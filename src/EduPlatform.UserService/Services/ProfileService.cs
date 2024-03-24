@@ -1,4 +1,5 @@
-﻿using EduPlatform.UserService.Db.Repositories.Interfaces;
+﻿using EduPlatform.UserService.Clients;
+using EduPlatform.UserService.Db.Repositories.Interfaces;
 using EduPlatform.UserService.DTOs.AchievementsDTO;
 using EduPlatform.UserService.DTOs.ProgresesDTO;
 using EduPlatform.UserService.DTOs.TasksDTO;
@@ -8,6 +9,7 @@ using EduPlatform.UserService.Enum;
 using EduPlatform.UserService.Enum.Logic;
 using EduPlatform.UserService.Mappers.Interfaces;
 using EduPlatform.UserService.Services.Interfaces;
+using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -17,11 +19,13 @@ namespace EduPlatform.UserService.Services
     {
         private readonly IProfileRepository _profileRepository;
         private ISimpleMapper _mapper;
+        private readonly EntryServiceClient _entryServiceClient;
 
-        public ProfileService(IProfileRepository profileRepository, ISimpleMapper mapper) 
+        public ProfileService(IProfileRepository profileRepository, ISimpleMapper mapper, IConfiguration config) 
         {
             _profileRepository = profileRepository;
             _mapper = mapper;
+            _entryServiceClient = new EntryServiceClient(config);
         }
 
         public async Task<List<TaskVm>?> GetAllTasksByUserId(long id)
@@ -34,7 +38,12 @@ namespace EduPlatform.UserService.Services
         public async Task<FullInformationProfileProgressVm?> GetFullInformationProgress(long id)
         {
             var progress = await _profileRepository.GetFullProgress(id);
-            progress.AllAchivements = await _profileRepository.GetFullInformationUserAchivements(id);
+            progress.AllAchivements = await _profileRepository.GetFullInformationUserAchievements(id);
+            foreach (var achievement in progress.AllAchivements)
+            {
+                achievement.RelativeIconLocation = $"{_entryServiceClient.EntryServiceUrl}/{achievement.RelativeIconLocation}";
+            }
+
             progress.RatingPosition = await _profileRepository.GetRatingPositionUser(id);
             progress.CountComplitedAchievements = progress.AllAchivements.Count;
 

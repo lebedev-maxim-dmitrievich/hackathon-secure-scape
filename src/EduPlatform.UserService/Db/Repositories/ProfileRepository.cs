@@ -52,6 +52,7 @@ namespace EduPlatform.UserService.Db.Repositories
             var progressDTO = progressEntity == null ? null : _mapper.ToMap<ProgressVm>(progressEntity);
             return progressDTO;
         }
+
         public async Task<Progress> GetFullProgress(long id)
         {
             var progress = await _appDbContext.Progreses.AsNoTracking().Include(p => p.User)
@@ -91,7 +92,7 @@ namespace EduPlatform.UserService.Db.Repositories
             var achievementsDTO = _mapper.ToMap<UserAchievementProgress, UserAchievementProgressVm>(achievements);
             return achievementsDTO;
         }
-        public async Task<List<Achievement>> GetFullInformationUserAchivements(long id)
+        public async Task<List<Achievement>> GetFullInformationUserAchievements(long id)
         {
             var allAchievments = await _appDbContext.Achievements.AsNoTracking().Include(a => a.Users).Include(a=> a.UsersAchievementsProgress).ToListAsync();
 

@@ -2,6 +2,7 @@
 using EduPlatform.UserService.Enum;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
+using System.IO;
 using System.Reflection.Emit;
 
 namespace EduPlatform.UserService.Db.Context;
@@ -104,9 +105,9 @@ public class AppDbContext : DbContext
             Id = 1,
             Title = "Master Hacker",
             Description = "Successfully hack 100 systems",
-            RelativeIconLocation = "/icons/hacker.png",
+            RelativeIconLocation = Path.Combine("media", "images", "achievements", "Master-Hacker.png"),
             Requirement = 100,
-            Rarity = Enum.Rarities.Mythical
+            Rarity = Rarities.Mythical
         },
 
         new Achievement
@@ -114,9 +115,9 @@ public class AppDbContext : DbContext
             Id = 2,
             Title = "Security Analyst",
             Description = "Complete 50 security assessments",
-            RelativeIconLocation = "/icons/analyst.png",
+            RelativeIconLocation = Path.Combine("media", "images", "achievements", "Security-Analyst.png"),
             Requirement = 50,
-            Rarity = Enum.Rarities.Rare
+            Rarity = Rarities.Rare
         });
 
         builder.Entity<UserAchievementProgress>().HasData(new UserAchievementProgress
