@@ -1,4 +1,4 @@
-﻿using EduPlatform.UserService.DTOs.AchivementsDTO;
+﻿using EduPlatform.UserService.DTOs.AchievementsDTO;
 using EduPlatform.UserService.DTOs.ProgresesDTO;
 using EduPlatform.UserService.DTOs.TasksDTO;
 using EduPlatform.UserService.DTOs.UsersDTO;

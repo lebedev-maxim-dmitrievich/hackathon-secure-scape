@@ -17,6 +17,7 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IO;
 using System.Reflection;
+using System.Text.Json.Serialization;
 
 public class Program
 {
@@ -60,7 +61,8 @@ public class Program
 
         builder.Services.AddScoped<ISimpleMapper, SimpleMapper>();
 
-        builder.Services.AddControllers();
+        builder.Services.AddControllers().AddJsonOptions(options =>
+            options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
         // Добавление сваггера с использование xml-документирования
         builder.Services.AddSwaggerGen(config =>
