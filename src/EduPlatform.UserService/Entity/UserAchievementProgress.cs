@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using EduPlatform.UserService.Enum;
 
 namespace EduPlatform.UserService.Entity
 {
@@ -6,7 +6,7 @@ namespace EduPlatform.UserService.Entity
     {
         public long UserId { get; set; }
         public long AchievementId { get; set; }
-        public string Topic { get; set; } = string.Empty;
+        public AchievementsType Topic { get; set; }
         public long ProgressAchievement { get; set; } = 0;
 
         public User User { get; set; } = null!;
