@@ -1,6 +1,9 @@
 ﻿using EduPlatform.TaskService.DTOs;
 using System;
+using System.Net;
 using System.Net.Http;
+using System.Net.Http.Json;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -8,8 +11,8 @@ namespace EduPlatform.TaskService.Clients;
 
 public class UserServiceClient
 {
-    private const string _baseUrl = "localhost";
-    private const int _port = 8081;
+    private const string _baseUrl = "http://user-service";
+    private const int _port = 8080;
 
     private readonly HttpClient _httpClient;
 
@@ -22,11 +25,12 @@ public class UserServiceClient
 
     public async Task SendUpdateProgress(ProgressUpdateDto progressUpdate)
     {
-        var requestOptions = new HttpRequestMessage(HttpMethod.Put, _urlUpdateProgress);
+        var requestMessage = new HttpRequestMessage(HttpMethod.Put, _urlUpdateProgress);
 
-        requestOptions.Content = new StringContent(JsonSerializer.Serialize(progressUpdate));
+        requestMessage.Content = new StringContent(JsonSerializer.Serialize(progressUpdate),
+            Encoding.UTF8, "application/json");
 
-        var response = await _httpClient.SendAsync(requestOptions);
+        var response = await _httpClient.SendAsync(requestMessage);
 
         if (!response.IsSuccessStatusCode)
         {

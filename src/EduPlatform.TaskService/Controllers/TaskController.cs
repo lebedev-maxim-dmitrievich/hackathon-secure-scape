@@ -4,6 +4,7 @@ using EduPlatform.TaskService.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -65,7 +66,7 @@ public class TaskController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpPost("answer")]
     [Authorize]
-    public async Task<IActionResult> GiveAnswer(GiveAnswerDTO answerDto)
+    public async Task<IActionResult> GiveAnswer([FromBody] GiveAnswerDTO answerDto)
     {
         var estimation = new AnswerEstimation();
 
