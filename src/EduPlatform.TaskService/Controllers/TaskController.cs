@@ -1,8 +1,10 @@
 ﻿using EduPlatform.TaskService.DTOs;
 using EduPlatform.TaskService.Enums;
 using EduPlatform.TaskService.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace EduPlatform.TaskService.Controllers;
@@ -49,5 +51,16 @@ public class TaskController : ControllerBase
         var tasks = await _taskService.GetTasks(topicName, difficult.ToString());
 
         return Ok(tasks);
+    }
+
+    [HttpPost("answer")]
+    [Authorize]
+    public async Task<IActionResult> GiveAnswer(GiveAnswerDTO answerDto)
+    {
+        //_taskService.CheckAnswer();
+
+        string? userId = User.FindFirst("id")?.Value;
+        //TODO: сделать обращение к сервису пользователя
+        return Ok(userId);
     }
 }

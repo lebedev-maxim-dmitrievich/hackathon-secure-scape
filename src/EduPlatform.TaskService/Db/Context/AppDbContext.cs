@@ -43,7 +43,6 @@ public class AppDbContext : DbContext
                 Id = 1,
                 Title = "Назваине 1",
                 Description = "Описание чего-о",
-                Exercise = "Упражение",
                 FileLocation = "",
                 IconLocation = "",
                 Difficult = Difficulties.Beginner.ToString(),
