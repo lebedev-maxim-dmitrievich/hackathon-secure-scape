@@ -53,14 +53,36 @@ public class TaskController : ControllerBase
         return Ok(tasks);
     }
 
+    /// <summary>
+    /// Отправка задания на проверку.
+    /// </summary>
+    /// <param name="answerDto">Структура для передачи ответа на задачу.</param>
+    /// <response code="200">Ответ о выполнении задачи.</response>
+    /// <response code="400">Не удалось получить id пользователя из jwt-токена.</response>
+    /// <response code="404">Задачи с указанным id не существует.</response>
+    [ProducesResponseType(typeof(AnswerEstimation), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpPost("answer")]
     [Authorize]
     public async Task<IActionResult> GiveAnswer(GiveAnswerDTO answerDto)
     {
-        //_taskService.CheckAnswer();
+        var estimation = new AnswerEstimation();
 
-        string? userId = User.FindFirst("id")?.Value;
-        //TODO: сделать обращение к сервису пользователя
-        return Ok(userId);
+        if (await _taskService.CheckAnswer(answerDto))
+        {
+            estimation.Correct = true;
+            string? userId = User.FindFirst("id")?.Value;
+            if (string.IsNullOrEmpty(userId))
+            {
+                return BadRequest(new ProblemDetails 
+                { 
+                    Detail = "Не удалось получить id пользователя"
+                });
+            }
+            await _taskService.UpdateUserProgress(long.Parse(userId), answerDto.TaskId);
+        }
+
+        return Ok(estimation);
     }
 }
