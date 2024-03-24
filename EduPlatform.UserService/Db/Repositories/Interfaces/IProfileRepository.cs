@@ -20,7 +20,18 @@ public interface IProfileRepository
 
     public Task<List<TaskVm>?> GetTasksUser(long id);
 
-    public Task<List<AchievementVm>?> GetAchivements(long id);
+    public Task<List<AchievementVm>> GetAllAchivements();
+
+    public Task<List<UserAchievementProgressVm>> GetUserAchivements(long id);
+
+    public Task<string> GetTypeAchievement(long id);
+
+    public Task<List<AchievementVm>> GetAllAchievementsWithTopicType(string category);
+
+    public Task<UserAchievementProgressVm> GetAchievementWithUserTopicType(string category, long id);
 
     public Task<long> UpdateProgress(Progress progress);
+
+    //public Task<long> UpdateIncrementAchievementsByTopicType(UserAchievementProgressVm achievements);
+
 }

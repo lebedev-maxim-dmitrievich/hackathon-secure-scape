@@ -5,6 +5,7 @@ using EduPlatform.UserService.DTOs.ProgresesDTO;
 using EduPlatform.UserService.DTOs.TasksDTO;
 using EduPlatform.UserService.DTOs.UsersDTO;
 using EduPlatform.UserService.Entity;
+using EduPlatform.UserService.Enum;
 using EduPlatform.UserService.Mappers.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -66,12 +67,43 @@ namespace EduPlatform.UserService.Db.Repositories
             return tasksDTO;
         }
 
-        public async Task<List<AchievementVm>?> GetAchivements(long id)
+        public async Task<List<AchievementVm>> GetAllAchivements()
         {
-            var achivements = await _appDbContext.Achievements.AsNoTracking().Where(a => a.Id == id).ToListAsync();
+            var achievements = await _appDbContext.Achievements.AsNoTracking().ToListAsync();
 
-            var achivementsDTO = _mapper.ToMap<Achievement, AchievementVm>(achivements);
-            return achivementsDTO;
+            var achievementsDTO = _mapper.ToMap<Achievement, AchievementVm>(achievements);
+            return achievementsDTO;
+        }
+
+        public async Task<List<UserAchievementProgressVm>> GetUserAchivements(long id)
+        {
+            var achievements = await _appDbContext.UsersAchievementsProgress.AsNoTracking().Where(a => a.UserId == id).ToListAsync();
+
+            var achievementsDTO = _mapper.ToMap<UserAchievementProgress, UserAchievementProgressVm>(achievements);
+            return achievementsDTO;
+        }
+
+        public async Task<string> GetTypeAchievement(long id)
+        {
+            var achievement = await _appDbContext.Achievements.AsNoTracking().Where(t => t.Id == id).FirstAsync();
+            var typeAchievement = achievement.Type;
+
+            return typeAchievement;
+        }
+        public async Task<List<AchievementVm>> GetAllAchievementsWithTopicType(string category)
+        {
+            var achievements = await _appDbContext.Achievements.AsNoTracking().Where(a => a.Type == category).ToListAsync();
+
+            var achievementsDTO = _mapper.ToMap<Achievement, AchievementVm>(achievements);
+            return achievementsDTO;
+        }
+
+        public async Task<UserAchievementProgressVm> GetAchievementWithUserTopicType(string category, long id)
+        {
+            var userAchievements = await GetUserAchivements(id);
+            var achievement = userAchievements.Where(u => u.Topic == category).First();
+
+            return achievement;
         }
 
         public async Task<long> UpdateProgress(Progress progress)
@@ -81,5 +113,15 @@ namespace EduPlatform.UserService.Db.Repositories
 
             return progress.Id;
         }
+
+        /*public Task<long> UpdateIncrementAchievementsByTopicType(UserAchievementProgressVm achievement)
+        {
+            var usetAchievement = new UserAchievementProgressVm() 
+            { 
+                Topic = achievement.Topic ,
+                ProgressAchievement = achievement.ProgressAchievement,
+            };
+           
+        }*/
     }
 }

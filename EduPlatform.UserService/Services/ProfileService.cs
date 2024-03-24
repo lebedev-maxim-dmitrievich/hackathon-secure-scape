@@ -4,6 +4,7 @@ using EduPlatform.UserService.DTOs.ProgresesDTO;
 using EduPlatform.UserService.DTOs.TasksDTO;
 using EduPlatform.UserService.DTOs.UsersDTO;
 using EduPlatform.UserService.Entity;
+using EduPlatform.UserService.Enum;
 using EduPlatform.UserService.Mappers.Interfaces;
 using EduPlatform.UserService.Services.Interfaces;
 using System.Collections.Generic;
@@ -36,11 +37,11 @@ namespace EduPlatform.UserService.Services
             return await _profileRepository.GetProgress(id);
         }
 
-        public async Task<List<AchievementVm>?> GetUserAchievements(long id)
+        public async Task<List<UserAchievementProgressVm>?> GetUserAchievements(long id)
         {
             if (!_profileRepository.CheckUser(id).Result) return null;
 
-            return await _profileRepository.GetAchivements(id);
+            return await _profileRepository.GetUserAchivements(id);
         }
 
         public async Task<UserVm?> GetUserById(long id)
@@ -53,12 +54,12 @@ namespace EduPlatform.UserService.Services
             var task = new TaskEntity()
             {
                 ExternalTaskId = progressVm.TaskId,
-                ProgressId = progressVm.ProgressId,
+                ProgressId = progressVm.UserId,
             };
 
             await _profileRepository.AddTask(task);
 
-            var progressDTO = await _profileRepository.GetProgress(progressVm.ProgressId);
+            var progressDTO = await _profileRepository.GetProgress(progressVm.UserId);
             if (progressDTO != null)
             {
                 progressDTO.Scores += progressVm.TaskPoint;
@@ -71,9 +72,24 @@ namespace EduPlatform.UserService.Services
             return progressId;
         }
 
-        public async Task<List<long>> GetAndUpdateAchievments()
+        /*public async Task<List<long>> UpdateAchievments(ProgressUpdateVm complitedTask)
         {
+            //var achievements = await _profileRepository.GetAllAchivements();
 
-        }
+            //var type = _profileRepository.GetTypeAchievement(progressVm.ProgressId);
+            //var type = complitedTask.TopicTitle.ToLower();
+            var complitedAchivements = new List<UserAchievementProgressVm>();
+
+            var listOfAchievementsWithTopicType = _profileRepository.GetAllAchievementsWithTopicType(complitedTask.TopicTitle);// список ачивок по конкретной категории
+            var listOfAchievementsWithTopicType2 = _profileRepository.GetAchievementWithUserTopicType(complitedTask.TopicTitle, complitedTask.ProgressId);//user Таблица ачивок ... возврат аичивок по категории (найдёт запись 1)
+            
+            
+            var topicTypeProgress = _profileRepository.IncrementAchievementsByTopicType(listOfAchievementsWithTopicType2); // инриментит нужные денные.. возвращает long progress
+            complitedAchivements.Add(CheckAchievements(listOfAchievementsWithTopicType, topicTypeProgress));// возвращает list выполненных ачивок , добавляя его в резалт лист
+
+            var listOfAchievementsWithDifficultType = _profileRepository.FindeAllAchievementsWithDifficultType();
+            var listOfAchievementsWithPointType = _profileRepository.FindeAllAchievementsWithPointType();
+
+        }*/
     }
 }

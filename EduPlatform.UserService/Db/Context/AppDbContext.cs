@@ -1,4 +1,5 @@
 ﻿using EduPlatform.UserService.Entity;
+using EduPlatform.UserService.Enum;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using System.Reflection.Emit;
@@ -12,6 +13,7 @@ public class AppDbContext : DbContext
     public DbSet<Progress> Progreses => Set<Progress>();
     public DbSet<TaskEntity> Tasks => Set<TaskEntity>();
     public DbSet<Achievement> Achievements => Set<Achievement>();
+    public DbSet<UserAchievementProgress> UsersAchievementsProgress => Set<UserAchievementProgress>();
 
     public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options) {}
@@ -121,21 +123,24 @@ public class AppDbContext : DbContext
         {
             UserId = 1,
             AchievementId = 1,
-            Progress = 1
+            Topic = AchievementsType.Cryptography,
+            ProgressAchievement = 1
         },
 
         new UserAchievementProgress
         {
             UserId = 1,
             AchievementId = 2,
-            Progress = 20
+            Topic = AchievementsType.Beginner,
+            ProgressAchievement = 20
         },
 
         new UserAchievementProgress
         {
             UserId = 2,
-            AchievementId = 1,
-            Progress = 100
+            AchievementId = 2,
+            Topic = AchievementsType.Advanced,
+            ProgressAchievement = 100
         });
 
         base.OnModelCreating(builder);
