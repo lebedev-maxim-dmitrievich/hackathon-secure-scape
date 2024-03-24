@@ -25,7 +25,7 @@ public class AppDbContext : DbContext
                 Id = 1,
                 Title = "Реверс-инжиниринг",
                 Description = "Реверсивный инжиниринг (реверс инжиниринг, обратное проектирование, reverse-engineering)",
-                ImageLocation = Path.Combine("images", "topics", "reverse-engineering.jpg")
+                ImageLocation = Path.Combine("media", "images", "topics", "reverse-engineering.png")
             });
 
         builder.Entity<Theory>().HasData(
