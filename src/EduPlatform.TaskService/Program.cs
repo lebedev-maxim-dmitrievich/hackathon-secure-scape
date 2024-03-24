@@ -57,8 +57,10 @@ public class Program
             config.IncludeXmlComments(xmlPath);
         });
 
+        builder.Services.AddScoped<ITopicRepository, TopicRepository>();
         builder.Services.AddScoped<ITaskRepository, TaskRepository>();
 
+        builder.Services.AddScoped<ITopicService, TopicService>();
         builder.Services.AddScoped<ITaskService, TaskHandlerService>();
 
         var app = builder.Build();

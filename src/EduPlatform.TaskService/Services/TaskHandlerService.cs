@@ -27,6 +27,11 @@ public class TaskHandlerService : ITaskService
 
     public async Task<TasksVm> GetTasks(string? topicName, string? difficultName)
     {
+        if (string.IsNullOrEmpty(difficultName))
+        {
+            difficultName = null;
+        }
+
         var tasks = await _taskRepository.GetTasks(topicName, difficultName);
 
         var tasksPresentation = new List<TaskPresentationVm>();

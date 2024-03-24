@@ -4,7 +4,7 @@ namespace EduPlatform.TaskService.DTOs;
 
 public class TasksVm
 {
-    List<TaskPresentationVm> Tasks { get; set; }
+    public List<TaskPresentationVm> Tasks { get; set; }
 
     public TasksVm(List<TaskPresentationVm> tasks)
     {
