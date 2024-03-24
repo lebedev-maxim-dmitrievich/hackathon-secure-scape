@@ -1,6 +1,4 @@
-﻿using EduPlatform.TaskService.Enums;
-
-namespace EduPlatform.TaskService.Entities;
+﻿namespace EduPlatform.TaskService.Entities;
 
 public class TaskEntity
 {
