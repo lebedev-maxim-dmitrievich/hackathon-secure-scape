@@ -1,4 +1,5 @@
-﻿using EduPlatform.UserService.DTOs.ProgresesDTO;
+﻿using EduPlatform.UserService.DTOs.AchievementsDTO;
+using EduPlatform.UserService.DTOs.ProgresesDTO;
 using EduPlatform.UserService.DTOs.TasksDTO;
 using EduPlatform.UserService.DTOs.UsersDTO;
 using EduPlatform.UserService.Services.Interfaces;
@@ -89,7 +90,7 @@ namespace EduPlatform.UserService.Controllers
         /// <response code="200">Достижения найдены, возвращает список достижений пользователя.</response>
         /// <response code="404">Достижения не найдены, пользователь не найден.</response>
         /// <returns></returns>
-        [ProducesResponseType(typeof(long), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<UserAchievementProgressVm>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("allUserAchievements/{id}")]
         [HttpGet]
@@ -101,25 +102,45 @@ namespace EduPlatform.UserService.Controllers
             return Ok(achivements);
         }
 
-        /*/// <summary>
-        /// Добавление задачи в прогресс пользователя 
+        /// <summary>
+        /// Возвраn рейтинга пользователей
         /// </summary>
-        /// <param name="taskVm">Объект для добавления задания</param>
-        /// <response code="200">Задание добавлено, возвращает id задачи.</response>
-        /// <response code="400">Нет задания для добавления.</response>
+        /// <param name="count">Размер рейтинга</param>
+        /// <response code="200">Сформирован рейтин, возвращает рейтинг пользователей.</response>
+        /// <returns></returns>
+        [ProducesResponseType(typeof(List<RatingProgressVm>), StatusCodes.Status200OK)]
+        [Route("getRating/{count}")]
+        [HttpGet]
+        public async Task<IActionResult> GetRatingUsers(int count)
+        {
+            var rating = await _profileService.GetRatingUsers(count);
+
+            return Ok(rating);
+        }
+
+        /// <summary>
+        /// Возврат полной информации прогресса пользователя
+        /// </summary>
+        /// <param name="id">Индентификатор пользователя</param>
+        /// <response code="200">Сформирован рейтин, возвращает рейтинг пользователей.</response>
+        /// <returns></returns>
+        [Route("FullProfileInformation/{id}")]
+        [HttpGet]
+        public async Task<IActionResult> GetFullInformationProfileProgress(long id)
+        {
+            var information = await _profileService.GetFullInformationProgress(id);
+
+            return Ok(information);
+        }
+
+        /// <summary>
+        /// Обновление прогресса пользователя
+        /// </summary>
+        /// <param name="progressVm">Объект с новыми данными для обновления</param>
+        /// <response code="200">Прогресс обновлён, возвращает id прогресса</response>
         /// <returns></returns>
         [ProducesResponseType(typeof(long), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Route("addTask")]
-        [HttpPost]
-        public async Task<IActionResult> AddTaskInProgress(TaskVm taskVm)
-        {
-            if (taskVm == null) return BadRequest(new ProblemDetails() { Detail = "Нет задания для добавления" });
-
-            long? id = await _profileService.AddTaskInProgress(taskVm);
-            return Ok(id);
-        }*/
-
+        [Route("updateProgress")]
         [HttpPut]
         public async Task<IActionResult> UpdateProgress(ProgressUpdateVm progressVm)
         {

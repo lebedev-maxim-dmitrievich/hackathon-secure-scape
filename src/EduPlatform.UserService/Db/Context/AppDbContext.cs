@@ -67,14 +67,14 @@ public class AppDbContext : DbContext
         builder.Entity<Progress>().HasData(new Progress
         {
             Id = 1,
-            Scores = 0,
+            Scores = 10,
             CountComplitedTask = 2,
         },
 
         new Progress
         {
             Id = 2,
-            Scores = 0,
+            Scores = 20,
             CountComplitedTask = 1,
         });
 

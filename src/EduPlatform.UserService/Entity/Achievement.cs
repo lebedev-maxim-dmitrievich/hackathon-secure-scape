@@ -9,7 +9,7 @@ namespace EduPlatform.UserService.Entity
         public string Title { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public string RelativeIconLocation { get; set; } = string.Empty;
-        public string Type { get; set; } = string.Empty;
+        public AchievementsType Type { get; set; }
         public int Requirement { get; set; }
         public Rarities Rarity { get; set; }
 

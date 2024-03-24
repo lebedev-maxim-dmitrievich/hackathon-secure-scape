@@ -5,6 +5,7 @@ using EduPlatform.UserService.DTOs.TasksDTO;
 using EduPlatform.UserService.DTOs.UsersDTO;
 using EduPlatform.UserService.Entity;
 using EduPlatform.UserService.Enum;
+using EduPlatform.UserService.Enum.Logic;
 using EduPlatform.UserService.Mappers.Interfaces;
 using EduPlatform.UserService.Services.Interfaces;
 using System.Collections.Generic;
@@ -30,11 +31,39 @@ namespace EduPlatform.UserService.Services
             return await _profileRepository.GetTasksUser(id);
         }
 
+        public async Task<FullInformationProfileProgressVm?> GetFullInformationProgress(long id)
+        {
+            var progress = await _profileRepository.GetFullProgress(id);
+            progress.AllAchivements = await _profileRepository.GetFullInformationUserAchivements(id);
+            progress.RatingPosition = await _profileRepository.GetRatingPositionUser(id);
+            progress.CountComplitedAchievements = progress.AllAchivements.Count;
+
+            var badge = new BadgeVm()
+            {
+                Level = LevelLogic.SetLevel(progress.Scores),
+                UserName = progress.User.UserName
+            };
+
+            var information = new FullInformationProfileProgressVm()
+            {
+                BadgeVm = badge,
+                ProgressVm = _mapper.ToMap<Progress, ProgressVm>(progress),
+                AchievementVm = _mapper.ToMap<Achievement, AchievementVm>(progress.AllAchivements)
+            };
+
+            return information;
+        }
+
         public async Task<ProgressVm?> GetProgresById(long id)
         {
             if (!_profileRepository.CheckUser(id).Result) return null;
 
             return await _profileRepository.GetProgress(id);
+        }
+
+        public async Task<List<RatingProgressVm>?> GetRatingUsers(int count)
+        {
+            return await _profileRepository.CreateRatingList(count);
         }
 
         public async Task<List<UserAchievementProgressVm>?> GetUserAchievements(long id)
@@ -84,7 +113,7 @@ namespace EduPlatform.UserService.Services
             var listOfAchievementsWithTopicType2 = _profileRepository.GetAchievementWithUserTopicType(complitedTask.TopicTitle, complitedTask.ProgressId);//user Таблица ачивок ... возврат аичивок по категории (найдёт запись 1)
             
             
-            var topicTypeProgress = _profileRepository.IncrementAchievementsByTopicType(listOfAchievementsWithTopicType2); // инриментит нужные денные.. возвращает long progress
+            var topicTypeProgress = _profileRepository.IncrementAchievementsByTopicType(listOfAchievementsWithTopicType2); // инкриментит нужные данные.. возвращает long progress
             complitedAchivements.Add(CheckAchievements(listOfAchievementsWithTopicType, topicTypeProgress));// возвращает list выполненных ачивок , добавляя его в резалт лист
 
             var listOfAchievementsWithDifficultType = _profileRepository.FindeAllAchievementsWithDifficultType();
