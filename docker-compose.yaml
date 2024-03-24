@@ -1,0 +1,65 @@
+version: "3"
+
+services:
+  entry-service:
+    build: 
+      context: ./src
+      dockerfile: ./EduPlatform.Entry/Dockerfile
+    volumes:
+      - ./resources:/resources
+    ports:
+      - "8080:8080"
+
+  user-service:
+    build: 
+      context: ./src
+      dockerfile: ./EduPlatform.UserService/Dockerfile
+    depends_on:
+      postgres-user-service:
+        condition: service_healthy
+    env_file:
+      ./src/EduPlatform.UserService/.env
+    ports:
+      - "8081:8080"
+  
+  postgres-user-service:
+    image: postgres
+    restart: always
+    volumes: 
+      - postgres-user-service:/var/lib/postgresql/data
+    env_file:
+      ./src/EduPlatform.UserService/.env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  task-service:
+    build: 
+      context: ./src
+      dockerfile: ./EduPlatform.TaskService/Dockerfile
+    depends_on:
+      postgres-user-service:
+        condition: service_healthy
+    env_file:
+      ./src/EduPlatform.TaskService/.env
+    ports:
+      - "8082:8080"
+
+  postgres-task-service:
+    image: postgres
+    restart: always
+    volumes: 
+      - postgres-task-service:/var/lib/postgresql/data
+    env_file:
+      ./src/EduPlatform.TaskService/.env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres-user-service:
+  postgres-task-service:

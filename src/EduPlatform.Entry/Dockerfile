@@ -21,4 +21,5 @@ RUN dotnet publish "./EduPlatform.Entry.csproj" -c $BUILD_CONFIGURATION -o /app/
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+VOLUME [ "/resources" ]
 ENTRYPOINT ["dotnet", "EduPlatform.Entry.dll"]
