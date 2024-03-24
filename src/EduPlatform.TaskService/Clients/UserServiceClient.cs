@@ -1,8 +1,8 @@
-﻿using EduPlatform.TaskService.DTOs;
+﻿using EduPlatform.TaskService.Db.Repositories.Interfaces;
+using EduPlatform.TaskService.DTOs;
+using Microsoft.Extensions.Configuration;
 using System;
-using System.Net;
 using System.Net.Http;
-using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -11,21 +11,33 @@ namespace EduPlatform.TaskService.Clients;
 
 public class UserServiceClient
 {
-    private const string _baseUrl = "http://user-service";
-    private const int _port = 8080;
+    private const string _userServiceHostEnvKey = "UserServiceHostEnv";
+    private const string _userServicePortEnvKey = "UserServicePostEnv";
 
+    private readonly string _userServiceUrl;
     private readonly HttpClient _httpClient;
 
-    private string _urlUpdateProgress => $"{_baseUrl}:{_port}/api/userprofile/";
+    private string _updateProgressUrl => $"{_userServiceUrl}/api/userprofile/updateProgress";
 
-    public UserServiceClient()
+
+    public UserServiceClient(IConfiguration config)
     {
         _httpClient = new HttpClient();
+
+        string? userServiceHost = Environment.GetEnvironmentVariable(config[_userServiceHostEnvKey] ?? "");
+        string? userServicePort = Environment.GetEnvironmentVariable(config[_userServicePortEnvKey] ?? "");
+
+        if (string.IsNullOrWhiteSpace(userServiceHost) || string.IsNullOrWhiteSpace(userServicePort))
+        {
+            throw new Exception("Не указаны хост или порт сервиса пользователей в переменных окружения");
+        }
+
+        _userServiceUrl = $"http://{userServiceHost}:{userServicePort}";
     }
 
     public async Task SendUpdateProgress(ProgressUpdateDto progressUpdate)
     {
-        var requestMessage = new HttpRequestMessage(HttpMethod.Put, _urlUpdateProgress);
+        var requestMessage = new HttpRequestMessage(HttpMethod.Put, _updateProgressUrl);
 
         requestMessage.Content = new StringContent(JsonSerializer.Serialize(progressUpdate),
             Encoding.UTF8, "application/json");
@@ -35,7 +47,7 @@ public class UserServiceClient
         if (!response.IsSuccessStatusCode)
         {
             throw new Exception($"Получение статус код {response.StatusCode}" +
-                $"при обращении к {_urlUpdateProgress}");
+                $"при обращении к {_userServiceUrl}");
         }
     }
 }

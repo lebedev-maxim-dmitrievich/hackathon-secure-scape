@@ -2,9 +2,9 @@
 using EduPlatform.TaskService.Db.Repositories.Interfaces;
 using EduPlatform.TaskService.DTOs;
 using EduPlatform.TaskService.Entities;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace EduPlatform.TaskService.Services;
@@ -12,10 +12,15 @@ namespace EduPlatform.TaskService.Services;
 public class TaskHandlerService : ITaskService
 {
     private readonly ITaskRepository _taskRepository;
+    private readonly IConfiguration _configuration;
+    private readonly EntryServiceClient _entryServiceClient;
 
-    public TaskHandlerService(ITaskRepository taskRepository)
+    public TaskHandlerService(ITaskRepository taskRepository, IConfiguration configuration)
     {
         _taskRepository = taskRepository;
+        _configuration = configuration;
+
+        _entryServiceClient = new EntryServiceClient(configuration);
     }
 
     public async Task<bool> CheckAnswer(GiveAnswerDTO answerDto)
@@ -28,7 +33,8 @@ public class TaskHandlerService : ITaskService
         TaskEntity task = await _taskRepository.GetTaskById(id);
 
         var taskVm = new TaskVm(task.Id, task.Title, task.Description, task.Topic.Title,
-            task.FileLocation, task.IconLocation, task.Difficult, task.Points);
+            $"{_entryServiceClient.EntryServiceUrl}/{task.FileLocation}",
+            $"{_entryServiceClient.EntryServiceUrl}/{task.IconLocation}", task.Difficult, task.Points);
 
         return taskVm;
     }
@@ -49,7 +55,9 @@ public class TaskHandlerService : ITaskService
             tasksPresentation.Add(
                 new(
                     task.Id, task.Title, task.Description, task.Topic.Title,
-                    task.FileLocation, task.IconLocation, task.Difficult, task.Points
+                    $"{_entryServiceClient.EntryServiceUrl}/{task.FileLocation}",
+                    $"{_entryServiceClient.EntryServiceUrl}/{task.IconLocation}",
+                    task.Difficult, task.Points
                 ));
         }
 
@@ -63,7 +71,7 @@ public class TaskHandlerService : ITaskService
         var progressUpdate = new ProgressUpdateDto(userId, task.Id,
             task.Points, task.Topic.Title, task.Difficult);
 
-        var userServiceClient = new UserServiceClient();
+        var userServiceClient = new UserServiceClient(_configuration);
         await userServiceClient.SendUpdateProgress(progressUpdate);
     }
 }
