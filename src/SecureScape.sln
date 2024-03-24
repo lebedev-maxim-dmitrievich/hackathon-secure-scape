@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EduPlatform.UserService", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EduPlatform.Entry", "EduPlatform.Entry\EduPlatform.Entry.csproj", "{0E207C11-D4C2-4648-AD63-7F286AE0D6B6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EduPlatform.TaskService", "EduPlatform.TaskService\EduPlatform.TaskService.csproj", "{50128856-6348-4FDD-899D-05FB8606ADF6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{0E207C11-D4C2-4648-AD63-7F286AE0D6B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0E207C11-D4C2-4648-AD63-7F286AE0D6B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0E207C11-D4C2-4648-AD63-7F286AE0D6B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50128856-6348-4FDD-899D-05FB8606ADF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50128856-6348-4FDD-899D-05FB8606ADF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50128856-6348-4FDD-899D-05FB8606ADF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50128856-6348-4FDD-899D-05FB8606ADF6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
