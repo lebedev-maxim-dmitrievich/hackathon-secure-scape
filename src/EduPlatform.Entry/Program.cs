@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.FileProviders;
+using System.IO;
 
 namespace EduPlatform.Entry
 {
@@ -17,8 +19,6 @@ namespace EduPlatform.Entry
                 FileProvider = new PhysicalFileProvider(
                     Path.Combine(builder.Environment.ContentRootPath, "..", "..", "resources"))
             });
-
-            Console.WriteLine(builder.Environment.WebRootPath);
 
             //app.MapControllers();
 
