@@ -1,5 +1,8 @@
 using EduPlatform.TaskService.Auth;
 using EduPlatform.TaskService.Db.Context;
+using EduPlatform.TaskService.Db.Repositories;
+using EduPlatform.TaskService.Db.Repositories.Interfaces;
+using EduPlatform.TaskService.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IO;
 using System.Reflection;
+using System.Text.Json.Serialization;
 
 namespace EduPlatform.TaskService;
 
@@ -42,7 +46,8 @@ public class Program
         builder.Services.AddDbContext<DbContext, AppDbContext>(options =>
             options.UseNpgsql(connectionString));
 
-        builder.Services.AddControllers();
+        builder.Services.AddControllers().AddJsonOptions(options =>
+            options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
         // Добавление сваггера с использование xml-документирования
         builder.Services.AddSwaggerGen(config =>
@@ -51,6 +56,10 @@ public class Program
             string xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
             config.IncludeXmlComments(xmlPath);
         });
+
+        builder.Services.AddScoped<ITaskRepository, TaskRepository>();
+
+        builder.Services.AddScoped<ITaskService, TaskHandlerService>();
 
         var app = builder.Build();
 
