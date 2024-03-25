@@ -12,14 +12,14 @@ public class EntryServiceClient
 
     public EntryServiceClient(IConfiguration config)
     {
-        string? userServiceHost = Environment.GetEnvironmentVariable(config[_entryServiceHostEnvKey] ?? "");
-        string? userServicePort = Environment.GetEnvironmentVariable(config[_entryServicePortEnvKey] ?? "");
+        string? entryServiceHost = Environment.GetEnvironmentVariable(config[_entryServiceHostEnvKey] ?? "");
+        string? entryServicePort = Environment.GetEnvironmentVariable(config[_entryServicePortEnvKey] ?? "");
 
-        if (string.IsNullOrWhiteSpace(userServiceHost) || string.IsNullOrWhiteSpace(userServicePort))
+        if (string.IsNullOrWhiteSpace(entryServiceHost) || string.IsNullOrWhiteSpace(entryServicePort))
         {
-            throw new Exception("Не указаны хост или порт сервиса пользователей в переменных окружения");
+            throw new Exception("Не указаны хост или порт сервиса entry в переменных окружения");
         }
 
-        EntryServiceUrl = $"http://{userServiceHost}:{userServicePort}";
+        EntryServiceUrl = $"http://{entryServiceHost}:{entryServicePort}";
     }
 }
