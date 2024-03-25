@@ -12,8 +12,8 @@ public class EntryServiceClient
 
     public EntryServiceClient(IConfiguration config)
     {
-        string? entryServiceHost = Environment.GetEnvironmentVariable(_entryServiceHostEnvKey ?? "");
-        string? entryServicePort = Environment.GetEnvironmentVariable(_entryServicePortEnvKey ?? "");
+        string? entryServiceHost = Environment.GetEnvironmentVariable(config[_entryServiceHostEnvKey] ?? "");
+        string? entryServicePort = Environment.GetEnvironmentVariable(config[_entryServicePortEnvKey] ?? "");
 
         if (string.IsNullOrWhiteSpace(entryServiceHost) || string.IsNullOrWhiteSpace(entryServicePort))
         {
