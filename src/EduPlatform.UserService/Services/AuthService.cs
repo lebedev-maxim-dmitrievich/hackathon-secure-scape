@@ -25,7 +25,7 @@ public class AuthService : IAuthService
         _passwordHasher = passwordHasher;
     }
 
-    public async Task<string?> Login(LoginUserVm loginUserVm)
+    public async Task<LoginAnswerMv?> Login(LoginUserVm loginUserVm)
     {
         var user = await _userRepository.GetUserByUsername(loginUserVm.UserName);
 
@@ -56,7 +56,11 @@ public class AuthService : IAuthService
                         SecurityAlgorithms.HmacSha256)
                     );
 
-                return new JwtSecurityTokenHandler().WriteToken(jwt);
+                return new LoginAnswerMv()
+                {
+                    Id = user.Id,
+                    JwtToken = new JwtSecurityTokenHandler().WriteToken(jwt)
+                };
             }
         }
         return null;

@@ -46,17 +46,17 @@ public class AuthController : ControllerBase
     /// Вход пользователя. Возвращает JWT-токен.
     /// </summary>
     /// <param name="loginUserVm">Объект для входа пользователя.</param>
-    /// <response code="200">Вход выполнен успешно, возвращате jwt-токен.</response>
+    /// <response code="200">Вход выполнен успешно, возвращает структура данных с id и jwt-токеном.</response>
     /// <response code="400">Возвращается если введён неправильный логин или пароль.</response>
-    [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(LoginAnswerMv), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginUserVm loginUserVm)
     {
-        string? jwtToken = await _authService.Login(loginUserVm);
-        if (jwtToken != null)
+        LoginAnswerMv? loginAnswerVm = await _authService.Login(loginUserVm);
+        if (loginAnswerVm != null)
         {
-            return Ok(jwtToken);
+            return Ok(loginAnswerVm);
         }
 
         return BadRequest(new ProblemDetails()
