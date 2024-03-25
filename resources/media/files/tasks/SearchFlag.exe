@@ -1,0 +1,29 @@
+#include <iostream>
+
+int main() {
+    const int staticNumber = 58; // Статическое число, которое нужно угадать
+    int userGuess;
+
+    std::cout << "Угадайте статическое число от 1 до 100: ";
+    std::cin >> userGuess;
+
+    while (std::cin.fail() || userGuess < 1 || userGuess > 100) {
+        std::cout << "Некорректный ввод. Пожалуйста, введите число от 1 до 100: ";
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cin >> userGuess;
+    }
+
+    while (userGuess != staticNumber) {
+        if (userGuess < staticNumber) {
+            std::cout << "Загаданное число больше. Попробуйте еще раз: ";
+        } else {
+            std::cout << "Загаданное число меньше. Попробуйте еще раз: ";
+        }
+        std::cin >> userGuess;
+    }
+
+    std::cout << "Поздравляем, вы угадали статическое число " << staticNumber << "!" << std::endl;
+
+    return 0;
+}
