@@ -65,6 +65,10 @@ public class Program
 
         var app = builder.Build();
 
+        app.UseCors(builder => builder
+            .AllowAnyOrigin()
+            .AllowAnyHeader());
+
         // Проверка подключения к бд
         using (var scope = app.Services.CreateScope())
         {

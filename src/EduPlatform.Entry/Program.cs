@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using System.IO;
 
@@ -10,7 +11,7 @@ namespace EduPlatform.Entry
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            //builder.Services.AddControllers();
+            builder.Services.AddControllers();
 
             var app = builder.Build();
 
@@ -20,11 +21,9 @@ namespace EduPlatform.Entry
                     Path.Combine(builder.Environment.ContentRootPath, "..", "..", "resources"))
             });
 
-            //app.MapControllers();
+            app.MapControllers();
 
             app.UseStaticFiles();
-
-            app.MapGet("/", () => "Hello world from Entry");
 
             app.Run();
         }
