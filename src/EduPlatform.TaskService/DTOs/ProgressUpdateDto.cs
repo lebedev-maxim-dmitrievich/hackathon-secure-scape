@@ -1,4 +1,6 @@
-﻿namespace EduPlatform.TaskService.DTOs;
+﻿using EduPlatform.TaskService.Enums;
+
+namespace EduPlatform.TaskService.DTOs;
 
 public class ProgressUpdateDto
 {
@@ -6,7 +8,7 @@ public class ProgressUpdateDto
     public long TaskId { get; set; }
     public int TaskPoints { get; set; }
     public string TopicTitle { get; set; }
-    public string TaskDifficult { get; set; }
+    public Difficulties TaskDifficult { get; set; }
 
     public ProgressUpdateDto(long userId, long taskId, int taskPoints,
         string topicTitle, string taskDifficult)
@@ -15,6 +17,6 @@ public class ProgressUpdateDto
         TaskId = taskId;
         TaskPoints = taskPoints;
         TopicTitle = topicTitle;
-        TaskDifficult = taskDifficult;
+        TaskDifficult = Difficulties.Beginner;
     }
 }
